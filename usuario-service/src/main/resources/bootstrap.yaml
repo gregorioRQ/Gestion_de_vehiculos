@@ -2,6 +2,6 @@ spring:
   application:
     name:  usuario-service
   cloud:
+    enabled:  true
     config:
-      enabled:  true
       uri:  http://localhost:8081
