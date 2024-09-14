@@ -2,7 +2,8 @@ spring:
   application:
     name:  automovil-service
   cloud:
+    enabled:  true
     config:
       uri:  http://localhost:8081
-    enabled:  true
+    
       
