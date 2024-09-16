@@ -1,0 +1,31 @@
+spring:
+  server:  8040
+eureka:
+  client:
+    fetch-registry:  true
+    register-with-eureka:  true
+    service-url:
+      defaul-zone:  http://localhost:8761/eureka
+    instance:
+      hostname:  localhost
+      
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled:  true
+      routes:
+        - id:  usuario-service
+          uri:  lb://usuario-service
+          predicates:
+            -  Path=/usuario/**
+        - id: automovil-service
+          uri: lb://automovil-service
+          predicates:
+            -  Path=/automovil/**
+        - id: motocicleta-service
+          uri: lb://motocicleta-service
+          predicates:
+            -  Path=/motocicleta/**
+         
