@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  *
  * @author rafae
  */
-@FeignClient(name="motocicleta-service", url="http://localhost:8003/motocicleta")
+@FeignClient(name="motocicleta-service"/*, url="http://localhost:8003/motocicleta"*/)
 public interface IMotocicletaFeignClient {
     @PostMapping()
     public MotocicletaDTO save(@RequestBody MotocicletaDTO motocicleta);

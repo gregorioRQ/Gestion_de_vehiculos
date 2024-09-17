@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * esta interfaz define los metodos que el cliente usara para solicitar info al microservicio automovil-service
  * los metodos se implementan en la capa de servicio
+ * antes de añadir el microservicio gateway habia que especificar manualmente la ruta al microservicio que se queria 
+ * consultar, con gateway esta configuracion se hace de manera automatica, por ello y para que no se produzcan errores
+ * el segundo parametro de la anotacion feignclient (url) se comento.
  * @author rafae
  */
-@FeignClient(name = "automovil-service", url="http://localhost:8002/automovil")
+@FeignClient(name = "automovil-service"/*, url="http://localhost:8002/automovil"*/)
 public interface IAutomovilFeignClient {
 
     @PostMapping()
