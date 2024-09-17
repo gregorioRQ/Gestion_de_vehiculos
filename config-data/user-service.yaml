@@ -1,5 +1,10 @@
+
+spring:
+  application:
+    name:  usuario-service
+
 server:
-  port:  8059
+  port:  ${PORT:${SERVER_PORT:0}}
 eureka:
   client:
     fetch-registry:  true
