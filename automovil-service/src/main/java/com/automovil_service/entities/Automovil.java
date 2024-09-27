@@ -23,7 +23,7 @@ public class Automovil {
     private int id;
     private String marca;
     private String modelo;
-    @Column(name = "usuario_id")
+    @Column(name = "usuario_id",nullable = true)
     private int usuarioId;
 
     public Automovil() {
