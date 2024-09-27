@@ -11,11 +11,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
-/**
- *
- * @author rafae
- */
-@Data
+
 @Builder
 public class UsuarioConVehiculoDTO {
 
@@ -31,6 +27,32 @@ public class UsuarioConVehiculoDTO {
         this.automoviles = automoviles;
         this.motocicletas = motocicletas;
     }
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<AutomovilDTO> getAutomoviles() {
+		return automoviles;
+	}
+
+	public void setAutomoviles(List<AutomovilDTO> automoviles) {
+		this.automoviles = automoviles;
+	}
+
+	public List<MotocicletaDTO> getMotocicletas() {
+		return motocicletas;
+	}
+
+	public void setMotocicletas(List<MotocicletaDTO> motocicletas) {
+		this.motocicletas = motocicletas;
+	}
+    
+    
 
     
 }

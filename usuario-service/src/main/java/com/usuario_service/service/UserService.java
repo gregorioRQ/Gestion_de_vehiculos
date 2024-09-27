@@ -24,76 +24,78 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class UserService {
 
-    @Autowired
-    private RestTemplate restTemplate;
+	@Autowired
+	private RestTemplate restTemplate;
 
-    @Autowired
-    private IUserRepository userRepo;
+	@Autowired
+	private IUserRepository userRepo;
 
-    @Autowired
-    private IAutomovilFeignClient automovilFeignClient;
+	@Autowired
+	private IAutomovilFeignClient automovilFeignClient;
 
-    @Autowired
-    private IMotocicletaFeignClient motocicletaFeignClient;
+	@Autowired
+	private IMotocicletaFeignClient motocicletaFeignClient;
 
-    /*
-    getAutomoviles y getMotocicletas
-    estos metodos son usados con otra forma de comunicar microservicio llamado restTemplate
-     */
-    public List<AutomovilDTO> getAutomoviles(int usuarioId) {
-        List<AutomovilDTO> automoviles = restTemplate.getForObject("http://localhost:8002/automovil/user/" + usuarioId, List.class);
-        return automoviles;
-    }
+	/*
+	 * getAutomoviles y getMotocicletas estos metodos son usados con otra forma de
+	 * comunicar microservicio llamado restTemplate
+	 */
+	public List<AutomovilDTO> getAutomoviles(int usuarioId) {
+		List<AutomovilDTO> automoviles = restTemplate.getForObject("http://localhost:8002/automovil/user/" + usuarioId,
+				List.class);
+		return automoviles;
+	}
 
-    public List<MotocicletaDTO> getMotocicleta(int usuarioId) {
-        List<MotocicletaDTO> motocicletas = restTemplate.getForObject("http://localhost:8003/motocicleta/user/" + usuarioId, List.class);
-        return motocicletas;
-    }
+	public List<MotocicletaDTO> getMotocicleta(int usuarioId) {
+		List<MotocicletaDTO> motocicletas = restTemplate
+				.getForObject("http://localhost:8003/motocicleta/user/" + usuarioId, List.class);
+		return motocicletas;
+	}
 
-    public AutomovilDTO saveAutomovil(int usuarioId, AutomovilDTO automovil) {
-        automovil.setUsuarioId(usuarioId);
-        AutomovilDTO automovilSave = automovilFeignClient.save(automovil);
-        return automovilSave;
-    }
+	public AutomovilDTO saveAutomovil(int usuarioId, AutomovilDTO automovil) {
+		automovil.setUsuarioId(usuarioId);
+		AutomovilDTO automovilSave = automovilFeignClient.save(automovil);
+		return automovilSave;
+	}
 
-    public MotocicletaDTO saveMotocicleta(int usuarioId, MotocicletaDTO motocicleta) {
-        motocicleta.setUsuarioId(usuarioId);
-        MotocicletaDTO motocicletaSave = motocicletaFeignClient.save(motocicleta);
-        return motocicletaSave;
-    }
+	public MotocicletaDTO saveMotocicleta(int usuarioId, MotocicletaDTO motocicleta) {
+		motocicleta.setUsuarioId(usuarioId);
+		MotocicletaDTO motocicletaSave = motocicletaFeignClient.save(motocicleta);
+		return motocicletaSave;
+	}
 
-    public  Object getUserAndVehicles(int usuarioId){
-        User userFound = userRepo.findById(usuarioId).orElse(null);     
-        if(userFound == null){           
-            return new ErrorDTO("Mensaje Error El usuario no ha sido encontrado");
-        }      
-        /* en esta parte se le pide al microservicio automovil por los datos de un usuario segun su id*/
-        List<AutomovilDTO> automovilesUser = automovilFeignClient.getAutomoviles(usuarioId);
-        if(automovilesUser.isEmpty()){
-            return new ErrorDTO("Mensaje el usuario no tiene automoviles");
-        }
-        List<MotocicletaDTO> motocicletasUser = motocicletaFeignClient.getMotocicletas(usuarioId);
-        if(motocicletasUser.isEmpty()){
-            return new ErrorDTO("Mensaje: este usuario no tiene motocicletas");         
-        }      
-        return UsuarioConVehiculoDTO.builder()
-                .user(userFound)
-                .automoviles(automovilesUser)
-                .motocicletas(motocicletasUser)
-                .build();
-    }
-    
-    public List<User> getAll() {
-        return userRepo.findAll();
-    }
+	public Object getUserAndVehicles(int usuarioId) {
+		User userFound = userRepo.findById(usuarioId).orElse(null);
+		if (userFound == null) {
+			return new ErrorDTO("Mensaje Error El usuario no ha sido encontrado");
+		}
+		/*
+		 * en esta parte se le pide al microservicio automovil por los datos de un
+		 * usuario segun su id
+		 */
+		List<AutomovilDTO> automovilesUser = automovilFeignClient.getAutomoviles(usuarioId);
+		if (automovilesUser.isEmpty()) {
+			return new ErrorDTO("Mensaje el usuario no tiene automoviles");
+		}
+		List<MotocicletaDTO> motocicletasUser = motocicletaFeignClient.getMotocicletas(usuarioId);
+		if (motocicletasUser.isEmpty()) {
+			return new ErrorDTO("Mensaje: este usuario no tiene motocicletas");
+		}
 
-    public User getUserById(int id) {
-        return userRepo.findById(id).orElse(null);
-    }
+		return new UsuarioConVehiculoDTO(userFound, automovilesUser, motocicletasUser);
+	}
 
-    public User save(User us) {
-        User nuser = userRepo.save(us);
-        return nuser;
-    }
-    
+	public List<User> getAll() {
+		return userRepo.findAll();
+	}
+
+	public User getUserById(int id) {
+		return userRepo.findById(id).orElse(null);
+	}
+
+	public User save(User us) {
+		User nuser = userRepo.save(us);
+		return nuser;
+	}
+
 }
