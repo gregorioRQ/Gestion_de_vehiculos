@@ -41,8 +41,9 @@ public class UserService {
 	 * comunicar microservicio llamado restTemplate
 	 */
 	public List<AutomovilDTO> getAutomoviles(int usuarioId) {
-		List<AutomovilDTO> automoviles = restTemplate.getForObject("http://localhost:8002/automovil/user/" + usuarioId,
-				List.class);
+		/*List<AutomovilDTO> automoviles = restTemplate.getForObject("http://localhost:8002/automovil/user/" + usuarioId,
+				List.class);*/
+		List<AutomovilDTO> automoviles = restTemplate.getForObject("http://automovil-service/automovil/user/"+usuarioId, List.class);
 		return automoviles;
 	}
 
