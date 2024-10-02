@@ -85,6 +85,7 @@ public class UserController {
 	/*éste metodo hace lo mismo que  listarAutomoviles pero 
     comunicandose con otro microservicio
 	 */
+	@CircuitBreaker(name = "motocicletaCB", fallbackMethod = "fallBackGetMotocicletas")
 	@GetMapping("/motocicletas/{usuarioId}")
 	public ResponseEntity<List<MotocicletaDTO>> listarMotocicletas(@PathVariable("usuarioId") int id) {
 		User userFound = userService.getUserById(id);
@@ -93,6 +94,11 @@ public class UserController {
 		}
 		List<MotocicletaDTO> motocicletas = userService.getMotocicleta(id);
 		return ResponseEntity.ok(motocicletas);
+	}
+	
+	public ResponseEntity<List<MotocicletaDTO>> fallBackGetMotocicletas(@PathVariable("usuarioId") int id,
+			RuntimeException excepcion) {
+		return new ResponseEntity("Usuario : " + id + " el servicio esta acualmente en mantenimiento ", HttpStatus.OK);
 	}
 
 	/* guarda un auto en un usuario ya existente 
@@ -114,9 +120,14 @@ public class UserController {
 	/* usando feign client le pide al microservicio de automoviles y de motocicletas
     los vehiculos de un usuario segun su id
 	 */
+		@CircuitBreaker(name = "todosCB", fallbackMethod = "fallBackGetAllVehicles")
 	@GetMapping("/vehicles/{usuarioId}")
 	public ResponseEntity<?> getAllVehicles(@PathVariable("usuarioId") int usuarioId) {
 		return ResponseEntity.ok(userService.getUserAndVehicles(usuarioId));
 	}
-
+	
+	public ResponseEntity<?> fallBackGetAllVehicles(@PathVariable("usuarioId") int id,
+			RuntimeException excepcion) {
+		return new ResponseEntity("Usuario : " + id + "los servicios no estan actualmente en linea", HttpStatus.OK);
+	}
 }
